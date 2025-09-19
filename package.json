@@ -1,0 +1,25 @@
+{
+  "name": "sensemore-h5",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.21"
+  },
+  "devDependencies": {
+    "@vicons/ionicons5": "^0.13.0",
+    "@vicons/utils": "^0.1.4",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "naive-ui": "^2.43.1",
+    "typescript": "~5.8.3",
+    "vfonts": "^0.0.3",
+    "vite": "^7.1.6",
+    "vue-tsc": "^3.0.7"
+  }
+}
