@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #1e88e5;
+            color: white;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+        .sidebar {
+            width: 240px;
+            background: #263238;
+            color: #cfd8dc;
+            transition: all 0.3s;
+        }
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        .menu-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .menu-item:hover {
+            background: #37474f;
+        }
+        .menu-item.active {
+            background: #1e88e5;
+            color: white;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: #fff;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+        .card {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            .menu-item span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">管理系统</div>
+        <div class="user-info">管理员</div>
+    </header>
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav class="sidebar-menu">
+                <div class="menu-item active">
+                    <span>仪表盘</span>
+                </div>
+                <div class="menu-item">
+                    <span>用户管理</span>
+                </div>
+                <div class="menu-item">
+                    <span>订单管理</span>
+                </div>
+                <div class="menu-item">
+                    <span>系统设置</span>
+                </div>
+            </nav>
+        </aside>
+        <main class="content">
+            <div class="card">
+                <h2>欢迎使用管理系统</h2>
+                <p>这是一个基于Flex布局的响应式管理后台框架。</p>
+            </div>
+            <div class="card">
+                <h3>系统概览</h3>
+                <p>当前版本: 1.0.0</p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,22 +1,19 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { NMessageProvider } from 'naive-ui'
+import { RouterView } from 'vue-router'
+
 </script>
 
 <template>
-  <HelloWorld msg="Vite + Vue" />
+  <NMessageProvider>
+    <RouterView />
+  </NMessageProvider>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+#app {
+  max-width: 750px;
+  margin: 0 auto;
+  font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 </style>

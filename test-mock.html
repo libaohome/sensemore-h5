@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Server测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        .result { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Mock Server 测试页面</h1>
+    
+    <button onclick="testLogin()">测试登录接口 (正确凭证)</button>
+    <button onclick="testLoginFail()">测试登录接口 (错误凭证)</button>
+    <button onclick="testLogout()">测试登出接口</button>
+    
+    <div id="results"></div>
+
+    <script>
+        function showResult(title, data, isSuccess = true) {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${isSuccess ? 'success' : 'error'}`;
+            resultDiv.innerHTML = `
+                <h3>${title}</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        async function testLogin() {
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: '123456'
+                    })
+                });
+                const data = await response.json();
+                showResult('登录成功测试', data, response.ok);
+            } catch (error) {
+                showResult('登录成功测试', { error: error.message }, false);
+            }
+        }
+
+        async function testLoginFail() {
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: 'wrong',
+                        password: 'wrong'
+                    })
+                });
+                const data = await response.json();
+                showResult('登录失败测试', data, response.ok);
+            } catch (error) {
+                showResult('登录失败测试', { error: error.message }, false);
+            }
+        }
+
+        async function testLogout() {
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const data = await response.json();
+                showResult('登出测试', data, response.ok);
+            } catch (error) {
+                showResult('登出测试', { error: error.message }, false);
+            }
+        }
+    </script>
+</body>
+</html>
