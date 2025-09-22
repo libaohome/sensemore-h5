@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="995f7489-4b6c-46ed-aa1b-c250770acde9" name="Changes" comment="naive ui项目初始化" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="32ufoo1HmcQKydA0hI1A7fJYDte" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/bao.li001/codebuddy/sensemore-h5",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="995f7489-4b6c-46ed-aa1b-c250770acde9" name="Changes" comment="" />
+      <created>1758275555934</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1758275555934</updated>
+    </task>
+    <task id="LOCAL-00001" summary="naive ui项目初始化">
+      <option name="closed" value="true" />
+      <created>1758278727712</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1758278727712</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="naive ui项目初始化" />
+    <option name="LAST_COMMIT_MESSAGE" value="naive ui项目初始化" />
+  </component>
+  <component name="com.ke.global.state.CodeLink_Configuration">
+    <option name="webViewProjectConfig">
+      <WebViewProjectConfig>
+        <option name="gitInfo">
+          <list />
+        </option>
+        <option name="isMavenProject" value="false" />
+        <option name="jdkVersion" value="21" />
+        <option name="sideCarIDEInfo">
+          <SideCarIDEInfo>
+            <option name="allFiles">
+              <set>
+                <option value="$PROJECT_DIR$/src/App.vue" />
+                <option value="$PROJECT_DIR$/src/components/HelloWorld.vue" />
+                <option value="$PROJECT_DIR$/vite.config.ts" />
+              </set>
+            </option>
+            <option name="autoRun" value="false" />
+            <option name="editorUrl" value="http://127.0.0.1:41100/" />
+            <option name="openFiles">
+              <set>
+                <option value="$PROJECT_DIR$/src/components/HelloWorld.vue" />
+              </set>
+            </option>
+            <option name="projectId" value="2979ca5c" />
+            <option name="rootDirectory" value="$PROJECT_DIR$" />
+            <option name="shell" value="/bin/bash" />
+            <option name="sideCarPort" value="42425" />
+            <option name="socketPort" value="41100" />
+          </SideCarIDEInfo>
+        </option>
+        <option name="workspaceFileType" value="Plain text" />
+      </WebViewProjectConfig>
+    </option>
+  </component>
+</project>
