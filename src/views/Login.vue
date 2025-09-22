@@ -110,7 +110,7 @@ import {
   type FormRules
 } from 'naive-ui'
 import { login, logout, getCaptcha } from '../api/auth'
-import { setToken, removeToken } from '../utils/auth'
+import { useUserStore } from '../store/useUserStore'
 import type { LoginParams, UserInfo as UserInfoType } from '../api/types/api'
 
 const message = useMessage()
@@ -143,13 +143,13 @@ const rules: FormRules = {
 // 加载验证码
 const loadCaptcha = async () => {
   try {
-    const { data: res } = await getCaptcha()
-    if (res.code === 200) {
-      captchaImage.value = res.data.captchaImage
+    const {code, message, data} = await getCaptcha() // 直接使用返回对象
+    console.log('验证码加载成功:', data)
+    if (code === 200) {
+      captchaImage.value = data.captchaImage
     }
   } catch (err) {
     console.error('加载验证码失败:', err)
-    // 如果API不可用，显示一个占位验证码
     captchaImage.value = "1234"
     isApiAvailable.value = false
   }
@@ -170,13 +170,14 @@ const handleLogin = async () => {
   error.value = ''
   
   try {
-    const { data: res } = await login(loginForm)
-    if (res.code === 200) {
+    const { code, message : msg, data } = await login(loginForm)
+    
+    if (code === 200) {
       // 保存token
-      setToken(res.data.token)
-      
+      useUserStore().setToken(data.token)
+      useUserStore().setUserInfo(data.userInfo)
       // 保存用户信息
-      userInfo.value = res.data.userInfo
+      userInfo.value = data.userInfo
       
       message.success('登录成功！')
       
@@ -184,11 +185,11 @@ const handleLogin = async () => {
       loginForm.password = ''
       loginForm.captcha = ''
     } else {
-      error.value = res.message
-      message.error(res.message || '登录失败')
+      error.value = msg
+      message.error(msg || '登录失败')
       
       // 重新加载验证码
-      if (res.code === 400) {
+      if (code === 400) {
         loadCaptcha()
       }
     }
@@ -196,22 +197,6 @@ const handleLogin = async () => {
     // 如果API不可用，提供模拟登录体验
     console.error('登录请求失败:', err)
     isApiAvailable.value = false
-    if (loginForm.username === 'admin' && loginForm.password === '123456') {
-      // 模拟成功登录
-      const mockToken = 'mock-token-' + Date.now()
-      setToken(mockToken)
-      userInfo.value = {
-        userId: 1,
-        username: 'admin',
-        avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
-      }
-      message.success('登录成功！(模拟模式)')
-      loginForm.password = ''
-      loginForm.captcha = ''
-    } else {
-      error.value = '用户名或密码错误'
-      message.error('用户名或密码错误')
-    }
   } finally {
     loading.value = false
   }
@@ -220,31 +205,31 @@ const handleLogin = async () => {
 // 处理登出
 const handleLogout = async () => {
   try {
-    const { data: res } = await logout()
-    if (res.code === 200) {
-      removeToken()
+    const { code, message:msg, data } = await logout()
+    if (code === 200) {
+      useUserStore().removeToken()
       userInfo.value = null
       message.success('退出登录成功！')
+    } else {
+      console.error('退出登录失败:', msg)
     }
   } catch (err) {
-    console.error('退出登录失败:', err)
     // 如果API不可用，仍然执行本地登出
-    removeToken()
-    userInfo.value = null
-    message.success('退出登录成功！(模拟模式)')
+    message.error('退出登录失败:',err)
   }
 }
 
 onMounted(() => {
   // 页面加载时检查是否已登录
-  const token = localStorage.getItem('token')
+  const token = useUserStore().getToken()
+  console.log('token:', token)  
   if (token) {
     // 这里可以调用获取用户信息的接口
     // 为了演示，我们假设token有效
+  }else{  
+    // 加载验证码
+    loadCaptcha()
   }
-  
-  // 加载验证码
-  loadCaptcha()
 })
 </script>
 

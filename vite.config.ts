@@ -14,6 +14,9 @@ export default defineConfig(({ command, mode }) => {
         '@': resolve(__dirname, 'src')
       }
     },
+    build: {
+      sourcemap: true // 生成完整的source map
+    },
     plugins: [
       vue(),
       viteMockServe({
