@@ -111,7 +111,7 @@ import {
 } from 'naive-ui'
 import { login, logout, getCaptcha } from '../api/auth'
 import { setToken, removeToken } from '../utils/auth'
-import type { LoginParams, LoginResult, UserInfo as UserInfoType } from '../api/types/api'
+import type { LoginParams, UserInfo as UserInfoType } from '../api/types/api'
 
 const message = useMessage()
 const formRef = ref<FormInst | null>(null)
@@ -143,7 +143,7 @@ const rules: FormRules = {
 // 加载验证码
 const loadCaptcha = async () => {
   try {
-    const res = await getCaptcha()
+    const { data: res } = await getCaptcha()
     if (res.code === 200) {
       captchaImage.value = res.data.captchaImage
     }
@@ -170,7 +170,7 @@ const handleLogin = async () => {
   error.value = ''
   
   try {
-    const res: LoginResult = await login(loginForm)
+    const { data: res } = await login(loginForm)
     if (res.code === 200) {
       // 保存token
       setToken(res.data.token)
@@ -220,7 +220,7 @@ const handleLogin = async () => {
 // 处理登出
 const handleLogout = async () => {
   try {
-    const res = await logout()
+    const { data: res } = await logout()
     if (res.code === 200) {
       removeToken()
       userInfo.value = null

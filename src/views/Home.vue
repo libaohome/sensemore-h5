@@ -2,6 +2,7 @@
 import { NButton, NDataTable } from 'naive-ui'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import HelloWorld from '../components/HelloWorld.vue'
 
 const router = useRouter()
 
@@ -23,5 +24,6 @@ const goToLogin = () => {
       <NButton type="primary" @click="goToLogin">前往登录页面</NButton>
     </div>
     <NDataTable class="mt-4" :columns="columns" :data="data" />
+    <HelloWorld />
   </div>
 </template>

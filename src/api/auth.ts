@@ -1,11 +1,11 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 import type { 
   LoginParams, 
   LoginResult, 
   UserInfo, 
   LogoutResult, 
   CaptchaResult 
-} from '@/api/types/api'
+} from './types/api'
 
 const API_PREFIX = '/api/auth'
 

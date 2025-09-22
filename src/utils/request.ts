@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 import { getToken } from './auth'
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api.sensemore.cn'
 console.log('API Base URL:', baseURL)
@@ -13,9 +13,10 @@ const service: AxiosInstance = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const token = getToken()
-    if (token && config.headers) {
+    if (token) {
+      config.headers = config.headers || {}
       config.headers.Authorization = `Bearer ${token}`
     }
     return config
