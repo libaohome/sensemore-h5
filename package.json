@@ -5,7 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:mock": "vite --mode mock",
+    "dev:prod": "vite --mode production",
+    "dev:test": "vite --mode test",
     "build": "vue-tsc -b && vite build",
+    "build:mock": "vue-tsc -b && vite build --mode mock",
+    "build:prod": "vue-tsc -b && vite build --mode production",
+    "build:test": "vue-tsc -b && vite build --mode test",
     "preview": "vite preview"
   },
   "dependencies": {

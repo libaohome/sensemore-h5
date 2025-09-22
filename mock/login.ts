@@ -1,6 +1,6 @@
 export default [
   {
-    url: '/api/login',
+    url: '/api/auth/login',
     method: 'post',
     timeout: 500,
     response: ({ body }) => {
@@ -26,7 +26,7 @@ export default [
     }
   },
   {
-    url: '/api/logout',
+    url: '/api/auth/logout',
     method: 'post',
     timeout: 200,
     response: () => {

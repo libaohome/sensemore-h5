@@ -1,71 +1,120 @@
 <template>
   <div class="login-container">
-    <div class="login-form">
-      <h2>用户登录</h2>
-      <div class="api-status">
-        <p class="status-info">真实API模式：{{ isApiAvailable ? '可用' : '不可用' }}</p>
-        <p class="demo-info" v-if="!isApiAvailable">使用用户名：admin，密码：123456 进行模拟登录</p>
-      </div>
-      <form @submit.prevent="handleLogin">
-        <div class="form-item">
-          <label>用户名：</label>
-          <input 
-            v-model="loginForm.username" 
-            type="text" 
+    <n-card class="login-form" title="用户登录" size="large">
+      <n-alert 
+        :type="isApiAvailable ? 'success' : 'warning'" 
+        :title="`真实API模式：${isApiAvailable ? '可用' : '不可用'}`"
+        style="margin-bottom: 20px;"
+      >
+        <template v-if="!isApiAvailable">
+          使用用户名：admin，密码：123456 进行模拟登录
+        </template>
+      </n-alert>
+
+      <n-form 
+        ref="formRef" 
+        :model="loginForm" 
+        :rules="rules"
+        @submit.prevent="handleLogin"
+      >
+        <n-form-item label="用户名" path="username">
+          <n-input 
+            v-model:value="loginForm.username" 
             placeholder="请输入用户名"
-            required
+            size="large"
           />
-        </div>
-        <div class="form-item">
-          <label>密码：</label>
-          <input 
-            v-model="loginForm.password" 
+        </n-form-item>
+        
+        <n-form-item label="密码" path="password">
+          <n-input 
+            v-model:value="loginForm.password" 
             type="password" 
             placeholder="请输入密码"
-            required
+            size="large"
+            show-password-on="click"
           />
-        </div>
-        <div class="form-item" v-if="captchaImage">
-          <label>验证码：</label>
-          <div class="captcha-container">
-            <input 
-              v-model="loginForm.captcha" 
-              type="text" 
+        </n-form-item>
+        
+        <n-form-item v-if="captchaImage" label="验证码" path="captcha">
+          <n-space>
+            <n-input 
+              v-model:value="loginForm.captcha" 
               placeholder="请输入验证码"
+              size="large"
+              style="flex: 1;"
             />
-            <img 
+            <n-image 
               :src="captchaImage" 
               @click="loadCaptcha"
               alt="验证码"
-              class="captcha-image"
+              width="100"
+              height="40"
+              style="cursor: pointer; border: 1px solid #d9d9d9; border-radius: 4px;"
             />
-          </div>
-        </div>
-        <button type="submit" :loading="loading" class="login-button">
-          {{ loading ? '登录中...' : '登录' }}
-        </button>
-      </form>
+          </n-space>
+        </n-form-item>
+        
+        <n-form-item>
+          <n-button 
+            type="primary" 
+            size="large" 
+            block 
+            :loading="loading"
+            @click="handleLogin"
+          >
+            {{ loading ? '登录中...' : '登录' }}
+          </n-button>
+        </n-form-item>
+      </n-form>
       
-      <div v-if="error" class="error-message">
-        {{ error }}
-      </div>
+      <n-alert v-if="error" type="error" :title="error" style="margin-top: 15px;" />
       
-      <div v-if="userInfo" class="user-info">
-        <h3>登录成功！</h3>
-        <p>用户ID: {{ userInfo.userId }}</p>
-        <p>用户名: {{ userInfo.username }}</p>
-        <button @click="handleLogout" class="logout-button">退出登录</button>
-      </div>
-    </div>
+      <n-card v-if="userInfo" title="登录成功！" type="success" style="margin-top: 20px;">
+        <n-descriptions :column="1" bordered>
+          <n-descriptions-item label="用户ID">
+            {{ userInfo.userId }}
+          </n-descriptions-item>
+          <n-descriptions-item label="用户名">
+            {{ userInfo.username }}
+          </n-descriptions-item>
+        </n-descriptions>
+        <n-button 
+          type="error" 
+          size="large" 
+          block 
+          @click="handleLogout"
+          style="margin-top: 15px;"
+        >
+          退出登录
+        </n-button>
+      </n-card>
+    </n-card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { 
+  NCard, 
+  NAlert, 
+  NForm, 
+  NFormItem, 
+  NInput, 
+  NButton, 
+  NSpace, 
+  NImage, 
+  NDescriptions, 
+  NDescriptionsItem,
+  useMessage,
+  type FormInst,
+  type FormRules
+} from 'naive-ui'
 import { login, logout, getCaptcha } from '../api/auth'
 import { setToken, removeToken } from '../utils/auth'
-import type { LoginParams, LoginResult, UserInfo as UserInfoType } from '../types/api'
+import type { LoginParams, LoginResult, UserInfo as UserInfoType } from '../api/types/api'
 
+const message = useMessage()
+const formRef = ref<FormInst | null>(null)
 const loading = ref(false)
 const error = ref('')
 const captchaImage = ref('')
@@ -78,6 +127,19 @@ const loginForm = reactive<LoginParams>({
   captcha: ''
 })
 
+// 表单验证规则
+const rules: FormRules = {
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' }
+  ],
+  captcha: [
+    { required: true, message: '请输入验证码', trigger: 'blur' }
+  ]
+}
+
 // 加载验证码
 const loadCaptcha = async () => {
   try {
@@ -88,15 +150,19 @@ const loadCaptcha = async () => {
   } catch (err) {
     console.error('加载验证码失败:', err)
     // 如果API不可用，显示一个占位验证码
-    captchaImage.value = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjIwIiBmaWxsPSIjMDAwIj4xMjM0PC90ZXh0Pjwvc3ZnPg=='
+    captchaImage.value = "1234"
     isApiAvailable.value = false
   }
 }
 
 // 处理登录
 const handleLogin = async () => {
-  if (!loginForm.username || !loginForm.password) {
-    alert('请输入用户名和密码')
+  // 验证表单
+  if (!formRef.value) return
+  try {
+    await formRef.value.validate()
+  } catch (errors) {
+    message.error('请填写完整的登录信息')
     return
   }
   
@@ -112,14 +178,14 @@ const handleLogin = async () => {
       // 保存用户信息
       userInfo.value = res.data.userInfo
       
-      alert('登录成功！')
+      message.success('登录成功！')
       
       // 清空表单
       loginForm.password = ''
       loginForm.captcha = ''
     } else {
       error.value = res.message
-      alert(res.message || '登录失败')
+      message.error(res.message || '登录失败')
       
       // 重新加载验证码
       if (res.code === 400) {
@@ -139,12 +205,12 @@ const handleLogin = async () => {
         username: 'admin',
         avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
       }
-      alert('登录成功！(模拟模式)')
+      message.success('登录成功！(模拟模式)')
       loginForm.password = ''
       loginForm.captcha = ''
     } else {
       error.value = '用户名或密码错误'
-      alert('用户名或密码错误')
+      message.error('用户名或密码错误')
     }
   } finally {
     loading.value = false
@@ -158,14 +224,14 @@ const handleLogout = async () => {
     if (res.code === 200) {
       removeToken()
       userInfo.value = null
-      alert('退出登录成功！')
+      message.success('退出登录成功！')
     }
   } catch (err) {
     console.error('退出登录失败:', err)
     // 如果API不可用，仍然执行本地登出
     removeToken()
     userInfo.value = null
-    alert('退出登录成功！(模拟模式)')
+    message.success('退出登录成功！(模拟模式)')
   }
 }
 
@@ -188,131 +254,16 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f5f5f5;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
 }
 
 .login-form {
-  background: white;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
-}
-
-.login-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.api-status {
-  margin-bottom: 20px;
-  padding: 10px;
-  background: #f0f8ff;
-  border-radius: 4px;
-  border-left: 4px solid #4CAF50;
-}
-
-.status-info {
-  margin: 0;
-  font-size: 14px;
-  color: #666;
-}
-
-.demo-info {
-  margin: 5px 0 0 0;
-  font-size: 12px;
-  color: #ff6b6b;
-  font-weight: 500;
-}
-
-.form-item {
-  margin-bottom: 20px;
-}
-
-.form-item label {
-  display: block;
-  margin-bottom: 8px;
-  color: #666;
-  font-weight: 500;
-}
-
-.form-item input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-.form-item input:focus {
-  outline: none;
-  border-color: #4CAF50;
-}
-
-.captcha-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.captcha-container input {
-  flex: 1;
-}
-
-.captcha-image {
-  height: 40px;
-  cursor: pointer;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.login-button, .logout-button {
-  width: 100%;
-  padding: 12px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.login-button:hover, .logout-button:hover {
-  background: #45a049;
-}
-
-.login-button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.error-message {
-  color: #f44336;
-  text-align: center;
-  margin-top: 15px;
-  padding: 10px;
-  background: #ffebee;
-  border-radius: 4px;
-}
-
-.user-info {
-  background: #e8f5e8;
-  padding: 20px;
-  border-radius: 4px;
-  margin-top: 20px;
-}
-
-.user-info h3 {
-  color: #4CAF50;
-  margin-bottom: 15px;
-}
-
-.user-info p {
-  margin: 8px 0;
-  color: #333;
+  max-width: 450px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
 }
 </style>
